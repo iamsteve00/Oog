@@ -1,5 +1,3 @@
--- Open-source script for Roblox
--- Compatible with Krnl executor
 
 -- Creating the Main Interface
 local ScreenGui = Instance.new("ScreenGui")
