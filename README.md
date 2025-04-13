@@ -1,3 +1,5 @@
+-- Open-source script for Roblox
+-- Compatible with Krnl executor
 
 -- Creating the Main Interface
 local ScreenGui = Instance.new("ScreenGui")
@@ -11,29 +13,6 @@ Frame.Parent = ScreenGui
 Frame.BackgroundColor3 = Color3.fromRGB(255, 182, 193) -- Theme color
 Frame.Position = UDim2.new(0.5, -150, 0.5, -100)
 Frame.Size = UDim2.new(0, 300, 0, 200)
-
--- Function to display a global message
-local function broadcastMessage(messageText, duration)
-    for _, player in ipairs(game.Players:GetPlayers()) do
-        local playerGui = player:FindFirstChildOfClass("PlayerGui")
-        if playerGui then
-            local messageLabel = Instance.new("TextLabel")
-            messageLabel.Parent = playerGui
-            messageLabel.Text = messageText
-            messageLabel.Size = UDim2.new(0, 400, 0, 50)
-            messageLabel.Position = UDim2.new(0.5, -200, 0.05, 0)
-            messageLabel.BackgroundTransparency = 0.5
-            messageLabel.TextScaled = true
-            messageLabel.TextColor3 = Color3.fromRGB(255, 0, 0)
-
-            task.delay(duration, function()
-                messageLabel:Destroy()
-            end)
-        end
-    end
-end
-
-broadcastMessage("🚀 Slime X Emili", 5)
 
 -- Creating Tabs
 local function createTabButton(name, text, position)
@@ -148,4 +127,4 @@ JumpButton.MouseButton1Click:Connect(function()
     if humanoid then
         humanoid.JumpPower = math.clamp(humanoid.JumpPower + 10, 10, 200) -- Limits between 10 and 200
     end
-end)# Oog
+end)
