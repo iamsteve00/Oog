@@ -1,5 +1,7 @@
+-- Open-source script for Roblox
+-- Compatible with Krnl executor
 
--- Criando a interface principal
+-- Creating the main interface
 local ScreenGui = Instance.new("ScreenGui")
 local Frame = Instance.new("Frame")
 
@@ -8,16 +10,16 @@ ScreenGui.Parent = game.CoreGui
 
 Frame.Name = "MainFrame"
 Frame.Parent = ScreenGui
-Frame.BackgroundColor3 = Color3.fromRGB(255, 182, 193) -- Cor do tema
+Frame.BackgroundColor3 = Color3.fromRGB(255, 182, 193) -- Theme color
 Frame.Position = UDim2.new(0.5, -150, 0.5, -100)
 Frame.Size = UDim2.new(0, 300, 0, 200)
 
--- Botões de Fechar e Minimizar
+-- Close and Minimize buttons (Now at the bottom right)
 local CloseButton = Instance.new("TextButton")
 CloseButton.Parent = Frame
 CloseButton.Text = "X"
 CloseButton.Size = UDim2.new(0, 30, 0, 30)
-CloseButton.Position = UDim2.new(1, -35, 0, 5)
+CloseButton.Position = UDim2.new(1, -35, 1, -35) -- Moved to the bottom right
 CloseButton.BackgroundColor3 = Color3.fromRGB(255, 0, 0)
 
 CloseButton.MouseButton1Click:Connect(function()
@@ -28,14 +30,14 @@ local MinimizeButton = Instance.new("TextButton")
 MinimizeButton.Parent = Frame
 MinimizeButton.Text = "-"
 MinimizeButton.Size = UDim2.new(0, 30, 0, 30)
-MinimizeButton.Position = UDim2.new(1, -70, 0, 5)
+MinimizeButton.Position = UDim2.new(1, -70, 1, -35) -- Moved to the bottom right
 MinimizeButton.BackgroundColor3 = Color3.fromRGB(255, 255, 0)
 
 MinimizeButton.MouseButton1Click:Connect(function()
     Frame.Visible = not Frame.Visible
 end)
 
--- Criando botões de aba
+-- Creating tab buttons
 local function createTabButton(name, text, position)
     local tabButton = Instance.new("TextButton")
     tabButton.Name = name
@@ -50,7 +52,7 @@ local TrollTab = createTabButton("TrollTab", "Troll", UDim2.new(0, 10, 0, 10))
 local PlayerTab = createTabButton("PlayerTab", "Player", UDim2.new(0, 100, 0, 10))
 local OthersTab = createTabButton("OthersTab", "Others", UDim2.new(0, 190, 0, 10))
 
--- Criando frames de abas
+-- Creating tab frames
 local function createTabFrame()
     local tabFrame = Instance.new("Frame")
     tabFrame.Parent = ScreenGui
@@ -64,11 +66,11 @@ local TrollFrame = createTabFrame()
 local PlayerFrame = createTabFrame()
 local OthersFrame = createTabFrame()
 
--- Botões de Voltar
+-- Back buttons
 local function createBackButton(tabFrame)
     local BackButton = Instance.new("TextButton")
     BackButton.Parent = tabFrame
-    BackButton.Text = "Voltar"
+    BackButton.Text = "Back"
     BackButton.Size = UDim2.new(0, 80, 0, 30)
     BackButton.Position = UDim2.new(0, 10, 0, 10)
     BackButton.BackgroundColor3 = Color3.fromRGB(150, 150, 150)
@@ -83,7 +85,7 @@ createBackButton(TrollFrame)
 createBackButton(PlayerFrame)
 createBackButton(OthersFrame)
 
--- Mostrar abas ao clicar
+-- Show tabs when clicked
 TrollTab.MouseButton1Click:Connect(function()
     Frame.Visible = false
     TrollFrame.Visible = true
@@ -99,16 +101,16 @@ PlayerTab.MouseButton1Click:Connect(function()
     PlayerFrame.Visible = true
 end)
 
--- Adicionando campo para selecionar jogador e ações na aba Troll
+-- Adding player selection field and actions in the Troll tab
 local PlayerNameBox = Instance.new("TextBox")
 PlayerNameBox.Parent = TrollFrame
-PlayerNameBox.PlaceholderText = "Digite o nome do player"
+PlayerNameBox.PlaceholderText = "Enter player's name"
 PlayerNameBox.Size = UDim2.new(0, 200, 0, 30)
 PlayerNameBox.Position = UDim2.new(0.5, -100, 0.2, 0)
 PlayerNameBox.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
 PlayerNameBox.TextColor3 = Color3.fromRGB(0, 0, 0)
 
--- Botão para Void Player
+-- Void Player button with advanced checking
 local VoidButton = Instance.new("TextButton")
 VoidButton.Parent = TrollFrame
 VoidButton.Text = "Void Player"
@@ -118,14 +120,18 @@ VoidButton.BackgroundColor3 = Color3.fromRGB(255, 0, 0)
 
 VoidButton.MouseButton1Click:Connect(function()
     local playerName = PlayerNameBox.Text
+    if playerName == "" then return end -- Prevents execution with empty input
+
     local targetPlayer = game.Players:FindFirstChild(playerName)
 
     if targetPlayer and targetPlayer.Character and targetPlayer.Character:FindFirstChild("HumanoidRootPart") then
-        targetPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(0, -500, 0)
+        targetPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(0, -500, 0) -- Teleport to Void
+    else
+        print("Player not found or missing HumanoidRootPart.")
     end
 end)
 
--- Botão para View Player
+-- View Player button with advanced checking
 local ViewButton = Instance.new("TextButton")
 ViewButton.Parent = TrollFrame
 ViewButton.Text = "View Player"
@@ -135,9 +141,13 @@ ViewButton.BackgroundColor3 = Color3.fromRGB(0, 150, 255)
 
 ViewButton.MouseButton1Click:Connect(function()
     local playerName = PlayerNameBox.Text
+    if playerName == "" then return end -- Prevents execution with empty input
+
     local targetPlayer = game.Players:FindFirstChild(playerName)
 
-    if targetPlayer and targetPlayer.Character and targetPlayer.Character:FindFirstChild("HumanoidRootPart") then
-        game.Workspace.CurrentCamera.CameraSubject = targetPlayer.Character.Humanoid
+    if targetPlayer and targetPlayer.Character and targetPlayer.Character:FindFirstChild("Humanoid") then
+        game.Workspace.CurrentCamera.CameraSubject = targetPlayer.Character.Humanoid -- Adjusts camera to follow the player
+    else
+        print("Player not found or missing Humanoid.")
     end
 end)
