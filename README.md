@@ -1,7 +1,5 @@
--- Open-source script for Roblox
--- Compatible with Krnl executor
 
--- Creating the Main Interface
+-- Criando a interface principal
 local ScreenGui = Instance.new("ScreenGui")
 local Frame = Instance.new("Frame")
 
@@ -10,11 +8,34 @@ ScreenGui.Parent = game.CoreGui
 
 Frame.Name = "MainFrame"
 Frame.Parent = ScreenGui
-Frame.BackgroundColor3 = Color3.fromRGB(255, 182, 193) -- Theme color
+Frame.BackgroundColor3 = Color3.fromRGB(255, 182, 193) -- Cor do tema
 Frame.Position = UDim2.new(0.5, -150, 0.5, -100)
 Frame.Size = UDim2.new(0, 300, 0, 200)
 
--- Creating Tabs
+-- Botões de Fechar e Minimizar
+local CloseButton = Instance.new("TextButton")
+CloseButton.Parent = Frame
+CloseButton.Text = "X"
+CloseButton.Size = UDim2.new(0, 30, 0, 30)
+CloseButton.Position = UDim2.new(1, -35, 0, 5)
+CloseButton.BackgroundColor3 = Color3.fromRGB(255, 0, 0)
+
+CloseButton.MouseButton1Click:Connect(function()
+    ScreenGui:Destroy()
+end)
+
+local MinimizeButton = Instance.new("TextButton")
+MinimizeButton.Parent = Frame
+MinimizeButton.Text = "-"
+MinimizeButton.Size = UDim2.new(0, 30, 0, 30)
+MinimizeButton.Position = UDim2.new(1, -70, 0, 5)
+MinimizeButton.BackgroundColor3 = Color3.fromRGB(255, 255, 0)
+
+MinimizeButton.MouseButton1Click:Connect(function()
+    Frame.Visible = not Frame.Visible
+end)
+
+-- Criando botões de aba
 local function createTabButton(name, text, position)
     local tabButton = Instance.new("TextButton")
     tabButton.Name = name
@@ -29,7 +50,7 @@ local TrollTab = createTabButton("TrollTab", "Troll", UDim2.new(0, 10, 0, 10))
 local PlayerTab = createTabButton("PlayerTab", "Player", UDim2.new(0, 100, 0, 10))
 local OthersTab = createTabButton("OthersTab", "Others", UDim2.new(0, 190, 0, 10))
 
--- Creating Tab Frames
+-- Criando frames de abas
 local function createTabFrame()
     local tabFrame = Instance.new("Frame")
     tabFrame.Parent = ScreenGui
@@ -40,10 +61,29 @@ local function createTabFrame()
 end
 
 local TrollFrame = createTabFrame()
-local OthersFrame = createTabFrame()
 local PlayerFrame = createTabFrame()
+local OthersFrame = createTabFrame()
 
--- Showing Tabs when clicked
+-- Botões de Voltar
+local function createBackButton(tabFrame)
+    local BackButton = Instance.new("TextButton")
+    BackButton.Parent = tabFrame
+    BackButton.Text = "Voltar"
+    BackButton.Size = UDim2.new(0, 80, 0, 30)
+    BackButton.Position = UDim2.new(0, 10, 0, 10)
+    BackButton.BackgroundColor3 = Color3.fromRGB(150, 150, 150)
+
+    BackButton.MouseButton1Click:Connect(function()
+        tabFrame.Visible = false
+        Frame.Visible = true
+    end)
+end
+
+createBackButton(TrollFrame)
+createBackButton(PlayerFrame)
+createBackButton(OthersFrame)
+
+-- Mostrar abas ao clicar
 TrollTab.MouseButton1Click:Connect(function()
     Frame.Visible = false
     TrollFrame.Visible = true
@@ -59,72 +99,45 @@ PlayerTab.MouseButton1Click:Connect(function()
     PlayerFrame.Visible = true
 end)
 
--- Fly Option in Others Tab
-local FlyButton = Instance.new("TextButton")
-FlyButton.Parent = OthersFrame
-FlyButton.Text = "Fly (Toggle)"
-FlyButton.Size = UDim2.new(0, 150, 0, 40)
-FlyButton.Position = UDim2.new(0.5, -75, 0.7, 0)
+-- Adicionando campo para selecionar jogador e ações na aba Troll
+local PlayerNameBox = Instance.new("TextBox")
+PlayerNameBox.Parent = TrollFrame
+PlayerNameBox.PlaceholderText = "Digite o nome do player"
+PlayerNameBox.Size = UDim2.new(0, 200, 0, 30)
+PlayerNameBox.Position = UDim2.new(0.5, -100, 0.2, 0)
+PlayerNameBox.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+PlayerNameBox.TextColor3 = Color3.fromRGB(0, 0, 0)
 
-local isFlying = false
-local flySpeed = 50
+-- Botão para Void Player
+local VoidButton = Instance.new("TextButton")
+VoidButton.Parent = TrollFrame
+VoidButton.Text = "Void Player"
+VoidButton.Size = UDim2.new(0, 150, 0, 40)
+VoidButton.Position = UDim2.new(0.5, -75, 0.35, 0)
+VoidButton.BackgroundColor3 = Color3.fromRGB(255, 0, 0)
 
-local function toggleFly(player)
-    if not player or not player.Character or not player.Character:FindFirstChild("HumanoidRootPart") then return end
-    local humanoidRootPart = player.Character.HumanoidRootPart
+VoidButton.MouseButton1Click:Connect(function()
+    local playerName = PlayerNameBox.Text
+    local targetPlayer = game.Players:FindFirstChild(playerName)
 
-    if isFlying then
-        isFlying = false
-    else
-        isFlying = true
-        game:GetService("RunService").Heartbeat:Connect(function()
-            humanoidRootPart.Velocity = Vector3.new(0, flySpeed, 0)
-        end)
-    end
-end
-
-FlyButton.MouseButton1Click:Connect(function()
-    toggleFly(game.Players.LocalPlayer)
-end)
-
--- Teleport Option in Player Tab
-local TeleportButton = Instance.new("TextButton")
-TeleportButton.Parent = PlayerFrame
-TeleportButton.Text = "Teleport"
-TeleportButton.Size = UDim2.new(0, 150, 0, 40)
-TeleportButton.Position = UDim2.new(0.5, -75, 0.2, 0)
-
-TeleportButton.MouseButton1Click:Connect(function()
-    local character = game.Players.LocalPlayer.Character
-    if character and character:FindFirstChild("HumanoidRootPart") then
-        character.HumanoidRootPart.CFrame = CFrame.new(0, 10, 0)
+    if targetPlayer and targetPlayer.Character and targetPlayer.Character:FindFirstChild("HumanoidRootPart") then
+        targetPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(0, -500, 0)
     end
 end)
 
--- Change Speed in Player Tab
-local SpeedButton = Instance.new("TextButton")
-SpeedButton.Parent = PlayerFrame
-SpeedButton.Text = "Change Speed"
-SpeedButton.Size = UDim2.new(0, 150, 0, 40)
-SpeedButton.Position = UDim2.new(0.5, -75, 0.35, 0)
+-- Botão para View Player
+local ViewButton = Instance.new("TextButton")
+ViewButton.Parent = TrollFrame
+ViewButton.Text = "View Player"
+ViewButton.Size = UDim2.new(0, 150, 0, 40)
+ViewButton.Position = UDim2.new(0.5, -75, 0.5, 0)
+ViewButton.BackgroundColor3 = Color3.fromRGB(0, 150, 255)
 
-SpeedButton.MouseButton1Click:Connect(function()
-    local humanoid = game.Players.LocalPlayer.Character:FindFirstChild("Humanoid")
-    if humanoid then
-        humanoid.WalkSpeed = math.clamp(humanoid.WalkSpeed + 10, 10, 100) -- Limits between 10 and 100
-    end
-end)
+ViewButton.MouseButton1Click:Connect(function()
+    local playerName = PlayerNameBox.Text
+    local targetPlayer = game.Players:FindFirstChild(playerName)
 
--- Change Jump Power in Player Tab
-local JumpButton = Instance.new("TextButton")
-JumpButton.Parent = PlayerFrame
-JumpButton.Text = "Change Jump"
-JumpButton.Size = UDim2.new(0, 150, 0, 40)
-JumpButton.Position = UDim2.new(0.5, -75, 0.5, 0)
-
-JumpButton.MouseButton1Click:Connect(function()
-    local humanoid = game.Players.LocalPlayer.Character:FindFirstChild("Humanoid")
-    if humanoid then
-        humanoid.JumpPower = math.clamp(humanoid.JumpPower + 10, 10, 200) -- Limits between 10 and 200
+    if targetPlayer and targetPlayer.Character and targetPlayer.Character:FindFirstChild("HumanoidRootPart") then
+        game.Workspace.CurrentCamera.CameraSubject = targetPlayer.Character.Humanoid
     end
 end)
