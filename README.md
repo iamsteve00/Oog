@@ -1,514 +1,388 @@
--- Criação da Tela Principal
-local ScreenGui = Instance.new("ScreenGui")
+-- Emilli Hub VERSÃO FINAL
+-- Parte 1 de 7
+
+-- Serviços
+local Players = game:GetService("Players")
+local StarterGui = game:GetService("StarterGui")
+local RunService = game:GetService("RunService")
+local LocalPlayer = Players.LocalPlayer
+
+-- Criar a Interface
+local ScreenGui = Instance.new("ScreenGui", game.CoreGui)
 ScreenGui.Name = "EmilliHub"
-ScreenGui.ResetOnSpawn = false
-ScreenGui.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
 
--- Mensagem de Boas-vindas Centralizada
-local WelcomeFrame = Instance.new("Frame")
-WelcomeFrame.Size = UDim2.new(0.5, 0, 0.2, 0)
-WelcomeFrame.Position = UDim2.new(0.25, 0, 0.4, 0)
+local MainFrame = Instance.new("Frame", ScreenGui)
+MainFrame.Size = UDim2.new(0, 450, 0, 400)
+MainFrame.Position = UDim2.new(0.5, -225, 0.5, -200)
+MainFrame.BackgroundColor3 = Color3.fromRGB(30,30,30)
+MainFrame.BorderSizePixel = 0
+MainFrame.Visible = false
+
+local UICorner = Instance.new("UICorner", MainFrame)
+UICorner.CornerRadius = UDim.new(0, 8)
+
+-- Título
+local Title = Instance.new("TextLabel", MainFrame)
+Title.Size = UDim2.new(1, 0, 0, 40)
+Title.BackgroundTransparency = 1
+Title.Text = "Brookhaven RP | Português"
+Title.Font = Enum.Font.GothamBold
+Title.TextColor3 = Color3.fromRGB(255,0,0)
+Title.TextSize = 20
+
+-- Minimize e Close
+local Minimize = Instance.new("TextButton", MainFrame)
+Minimize.Size = UDim2.new(0, 30, 0, 30)
+Minimize.Position = UDim2.new(1, -70, 0, 5)
+Minimize.BackgroundColor3 = Color3.fromRGB(50,50,50)
+Minimize.Text = "-"
+Minimize.TextColor3 = Color3.new(1,1,1)
+local MinimizeCorner = Instance.new("UICorner", Minimize)
+MinimizeCorner.CornerRadius = UDim.new(1,0)
+
+local Close = Instance.new("TextButton", MainFrame)
+Close.Size = UDim2.new(0, 30, 0, 30)
+Close.Position = UDim2.new(1, -35, 0, 5)
+Close.BackgroundColor3 = Color3.fromRGB(255,50,50)
+Close.Text = "X"
+Close.TextColor3 = Color3.new(1,1,1)
+local CloseCorner = Instance.new("UICorner", Close)
+CloseCorner.CornerRadius = UDim.new(1,0)
+
+-- Funções de Minimizar e Fechar
+Minimize.MouseButton1Click:Connect(function()
+	MainFrame.Visible = not MainFrame.Visible
+end)
+
+Close.MouseButton1Click:Connect(function()
+	ScreenGui:Destroy()
+end)
+
+-- Animação de Boas-vindas
+local WelcomeFrame = Instance.new("Frame", ScreenGui)
+WelcomeFrame.Size = UDim2.new(0, 400, 0, 100)
+WelcomeFrame.Position = UDim2.new(0.5, -200, 0.5, -50)
 WelcomeFrame.BackgroundTransparency = 0.5
-WelcomeFrame.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
-WelcomeFrame.BorderSizePixel = 0
-WelcomeFrame.Parent = ScreenGui
-
-local WelcomeText = Instance.new("TextLabel")
-WelcomeText.Size = UDim2.new(1, 0, 1, 0)
-WelcomeText.BackgroundTransparency = 1
-WelcomeText.Text = "Bem-vindo ao Emilli Hub!"
-WelcomeText.Font = Enum.Font.GothamBold
-WelcomeText.TextSize = 30
-WelcomeText.TextColor3 = Color3.fromRGB(255, 0, 0)
-WelcomeText.Parent = WelcomeFrame
-
--- Animação de Fade In e Fade Out
+WelcomeFrame.BackgroundColor3 = Color3.fromRGB(20,20,20)
 WelcomeFrame.Visible = true
-WelcomeFrame.BackgroundTransparency = 1
-WelcomeText.TextTransparency = 1
+
+local WelcomeUICorner = Instance.new("UICorner", WelcomeFrame)
+WelcomeUICorner.CornerRadius = UDim.new(0, 10)
+
+local WelcomeLabel = Instance.new("TextLabel", WelcomeFrame)
+WelcomeLabel.Size = UDim2.new(1, 0, 1, 0)
+WelcomeLabel.BackgroundTransparency = 1
+WelcomeLabel.Text = "Bem-vindo ao Emilli Hub!"
+WelcomeLabel.Font = Enum.Font.GothamBold
+WelcomeLabel.TextColor3 = Color3.fromRGB(255,0,0)
+WelcomeLabel.TextSize = 30
 
 task.spawn(function()
-    for i = 1, 0, -0.05 do
-        WelcomeFrame.BackgroundTransparency = i
-        WelcomeText.TextTransparency = i
-        task.wait(0.05)
-    end
-    task.wait(2)
-    for i = 0, 1, 0.05 do
-        WelcomeFrame.BackgroundTransparency = i
-        WelcomeText.TextTransparency = i
-        task.wait(0.05)
-    end
-    WelcomeFrame:Destroy()
+	for i = 1,0,-0.05 do
+		WelcomeFrame.BackgroundTransparency = i
+		task.wait(0.05)
+	end
+	task.wait(2)
+	for i = 0,1,0.05 do
+		WelcomeFrame.BackgroundTransparency = i
+		task.wait(0.05)
+	end
+	WelcomeFrame:Destroy()
+	MainFrame.Visible = true
 end)
 
--- Interface Principal do Hub
-local MainFrame = Instance.new("Frame")
-MainFrame.Size = UDim2.new(0, 600, 0, 400)
-MainFrame.Position = UDim2.new(0.5, -300, 0.5, -200)
-MainFrame.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
-MainFrame.BorderColor3 = Color3.fromRGB(255, 0, 0)
-MainFrame.BorderSizePixel = 2
-MainFrame.Active = true
-MainFrame.Draggable = true
-MainFrame.Parent = ScreenGui
-MainFrame.Visible = false -- Só aparece depois da mensagem
+-- Sidebar (Abas)
+local Sidebar = Instance.new("Frame", MainFrame)
+Sidebar.Size = UDim2.new(0, 70, 1, -40)
+Sidebar.Position = UDim2.new(0, 0, 0, 40)
+Sidebar.BackgroundColor3 = Color3.fromRGB(40,40,40)
 
--- Delay para aparecer
-task.delay(5, function()
-    MainFrame.Visible = true
-end)
+local SidebarCorner = Instance.new("UICorner", Sidebar)
+SidebarCorner.CornerRadius = UDim.new(0,8)
 
--- Layout lateral com Ícones
-local SideBar = Instance.new("Frame")
-SideBar.Size = UDim2.new(0, 60, 1, 0)
-SideBar.Position = UDim2.new(0, 0, 0, 0)
-SideBar.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
-SideBar.Parent = MainFrame
+-- Conteúdo principal
+local ContentFrame = Instance.new("Frame", MainFrame)
+ContentFrame.Size = UDim2.new(1, -70, 1, -40)
+ContentFrame.Position = UDim2.new(0, 70, 0, 40)
+ContentFrame.BackgroundTransparency = 1
 
-local SideLayout = Instance.new("UIListLayout")
-SideLayout.Parent = SideBar
-SideLayout.SortOrder = Enum.SortOrder.LayoutOrder
-SideLayout.Padding = UDim.new(0, 10)
+-- Tabelas para controle de abas
+local Tabs = {}
+local CurrentTab
 
--- Botões de Minimize e Fechar
-local MinimizeButton = Instance.new("TextButton")
-MinimizeButton.Size = UDim2.new(0, 25, 0, 25)
-MinimizeButton.Position = UDim2.new(1, -60, 0, 10)
-MinimizeButton.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
-MinimizeButton.Text = "-"
-MinimizeButton.TextColor3 = Color3.fromRGB(255, 255, 255)
-MinimizeButton.Parent = MainFrame
-
-local CloseButton = Instance.new("TextButton")
-CloseButton.Size = UDim2.new(0, 25, 0, 25)
-CloseButton.Position = UDim2.new(1, -30, 0, 10)
-CloseButton.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
-CloseButton.Text = "X"
-CloseButton.TextColor3 = Color3.fromRGB(255, 0, 0)
-CloseButton.Parent = MainFrame
-
--- Ações dos botões
-MinimizeButton.MouseButton1Click:Connect(function()
-    MainFrame.Visible = false
-end)
-
-CloseButton.MouseButton1Click:Connect(function()
-    ScreenGui:Destroy()
-end)
-
--- Título no Topo
-local TitleLabel = Instance.new("TextLabel")
-TitleLabel.Size = UDim2.new(1, 0, 0, 40)
-TitleLabel.Position = UDim2.new(0, 0, 0, 0)
-TitleLabel.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
-TitleLabel.BorderSizePixel = 0
-TitleLabel.Text = "Brookhaven RP | Português"
-TitleLabel.Font = Enum.Font.GothamBold
-TitleLabel.TextSize = 18
-TitleLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
-TitleLabel.Parent = MainFrame
-
--- Área de Páginas
-local PageContainer = Instance.new("Frame")
-PageContainer.Size = UDim2.new(1, -70, 1, -50)
-PageContainer.Position = UDim2.new(0, 70, 0, 50)
-PageContainer.BackgroundTransparency = 1
-PageContainer.Parent = MainFrame
-
-local Pages = {}
-
--- Função para Criar Páginas
-local function CreatePage(name)
-    local page = Instance.new("ScrollingFrame")
-    page.Size = UDim2.new(1, 0, 1, 0)
-    page.CanvasSize = UDim2.new(0, 0, 5, 0)
-    page.BackgroundTransparency = 1
-    page.Visible = false
-    page.Parent = PageContainer
-    Pages[name] = page
+-- Criar função para adicionar Abas
+function CreateTab(name, iconId)
+	local Button = Instance.new("ImageButton", Sidebar)
+	Button.Size = UDim2.new(1, 0, 0, 50)
+	Button.BackgroundTransparency = 1
+	Button.Image = "rbxassetid://"..iconId
+	
+	local TabFrame = Instance.new("ScrollingFrame", ContentFrame)
+	TabFrame.Size = UDim2.new(1,0,1,0)
+	TabFrame.CanvasSize = UDim2.new(0,0,2,0)
+	TabFrame.ScrollBarThickness = 6
+	TabFrame.BackgroundTransparency = 1
+	TabFrame.Visible = false
+	
+	Button.MouseButton1Click:Connect(function()
+		if CurrentTab then
+			CurrentTab.Visible = false
+		end
+		TabFrame.Visible = true
+		CurrentTab = TabFrame
+	end)
+	
+	Tabs[name] = TabFrame
 end
 
--- Lista de Abas
-local TabNames = {"Troll", "Movimentação", "Visual", "Admin", "Música", "Config"}
+-- Criar função para adicionar Botões dentro das Abas
+function CreateButton(tabName, text, callback)
+	local Button = Instance.new("TextButton", Tabs[tabName])
+	Button.Size = UDim2.new(1, -10, 0, 40)
+	Button.Position = UDim2.new(0,5,0, #Tabs[tabName]:GetChildren()*45)
+	Button.BackgroundColor3 = Color3.fromRGB(60,60,60)
+	Button.Text = text
+	Button.Font = Enum.Font.GothamBold
+	Button.TextColor3 = Color3.new(1,1,1)
+	Button.TextSize = 18
+	Button.BorderSizePixel = 0
+	
+	local ButtonCorner = Instance.new("UICorner", Button)
+	ButtonCorner.CornerRadius = UDim.new(0,6)
+	
+	Button.MouseButton1Click:Connect(callback)
+end)
 
-for _, name in ipairs(TabNames) do
-    CreatePage(name)
+-- Criando as Abas
+CreateTab("Troll", "4483362458") -- ícone de troll
+CreateTab("Movimentação", "4483362269") -- ícone de movimento
+CreateTab("Visual", "4483362909") -- ícone de olho
+CreateTab("Admin", "4483362535") -- ícone de escudo
+CreateTab("Música", "4483363015") -- ícone de música
+CreateTab("Config", "4483363095") -- ícone de engrenagem
 
-    local button = Instance.new("TextButton")
-    button.Size = UDim2.new(1, 0, 0, 40)
-    button.Text = name
-    button.BackgroundColor3 = Color3.fromRGB(35, 35, 35)
-    button.TextColor3 = Color3.fromRGB(255, 255, 255)
-    button.Font = Enum.Font.Gotham
-    button.TextSize = 14
-    button.Parent = SideBar
-
-    button.MouseButton1Click:Connect(function()
-        for _, page in pairs(Pages) do
-            page.Visible = false
-        end
-        Pages[name].Visible = true
-    end)
-end-- Funções Troll dentro da página Troll
-local TrollPage = Pages["Troll"]
-
--- Função: Crashar Jogadores (Fake Kick)
-local CrashButton = Instance.new("TextButton")
-CrashButton.Size = UDim2.new(0, 200, 0, 40)
-CrashButton.Position = UDim2.new(0, 10, 0, 10)
-CrashButton.Text = "Crashar Jogadores"
-CrashButton.BackgroundColor3 = Color3.fromRGB(45, 45, 45)
-CrashButton.TextColor3 = Color3.fromRGB(255, 255, 255)
-CrashButton.Font = Enum.Font.Gotham
-CrashButton.TextSize = 14
-CrashButton.Parent = TrollPage
-
-CrashButton.MouseButton1Click:Connect(function()
-    for _, player in ipairs(game.Players:GetPlayers()) do
-        if player ~= game.Players.LocalPlayer then
-            player:Kick("Você foi desconectado pelo Emilli Hub!")
-        end
+-- Funções Troll
+CreateButton("Troll", "Fling Players", function()
+    -- Fling clássico
+    local character = LocalPlayer.Character
+    if character and character:FindFirstChild("HumanoidRootPart") then
+        local BodyVelocity = Instance.new("BodyVelocity", character.HumanoidRootPart)
+        BodyVelocity.Velocity = Vector3.new(0,9999,0)
+        BodyVelocity.MaxForce = Vector3.new(999999,999999,999999)
+        task.wait(0.5)
+        BodyVelocity:Destroy()
     end
 end)
 
--- Função: Buggar Animações
-local BugAnimationButton = Instance.new("TextButton")
-BugAnimationButton.Size = UDim2.new(0, 200, 0, 40)
-BugAnimationButton.Position = UDim2.new(0, 10, 0, 60)
-BugAnimationButton.Text = "Buggar Animações"
-BugAnimationButton.BackgroundColor3 = Color3.fromRGB(45, 45, 45)
-BugAnimationButton.TextColor3 = Color3.fromRGB(255, 255, 255)
-BugAnimationButton.Font = Enum.Font.Gotham
-BugAnimationButton.TextSize = 14
-BugAnimationButton.Parent = TrollPage
-
-BugAnimationButton.MouseButton1Click:Connect(function()
-    local character = game.Players.LocalPlayer.Character
-    if character and character:FindFirstChildOfClass("Humanoid") then
-        character:FindFirstChildOfClass("Humanoid"):ChangeState(Enum.HumanoidStateType.StrafingNoPhysics)
-    end
-end)
-
--- Função: Fazer Player girar sem parar
-local SpinButton = Instance.new("TextButton")
-SpinButton.Size = UDim2.new(0, 200, 0, 40)
-SpinButton.Position = UDim2.new(0, 10, 0, 110)
-SpinButton.Text = "Girar Sem Parar"
-SpinButton.BackgroundColor3 = Color3.fromRGB(45, 45, 45)
-SpinButton.TextColor3 = Color3.fromRGB(255, 255, 255)
-SpinButton.Font = Enum.Font.Gotham
-SpinButton.TextSize = 14
-SpinButton.Parent = TrollPage
-
-local spinning = false
-SpinButton.MouseButton1Click:Connect(function()
-    spinning = not spinning
-    if spinning then
-        task.spawn(function()
-            while spinning do
-                local character = game.Players.LocalPlayer.Character
-                if character and character:FindFirstChild("HumanoidRootPart") then
-                    character.HumanoidRootPart.CFrame = character.HumanoidRootPart.CFrame * CFrame.Angles(0, math.rad(30), 0)
-                end
-                task.wait(0.1)
-            end
-        end)
-    end
-end)-- Funções de Movimentação dentro da página Movimentação
-local MovPage = Pages["Movimentação"]
-
--- Fly
-local FlyButton = Instance.new("TextButton")
-FlyButton.Size = UDim2.new(0, 200, 0, 40)
-FlyButton.Position = UDim2.new(0, 10, 0, 10)
-FlyButton.Text = "Ativar Fly (E para voar)"
-FlyButton.BackgroundColor3 = Color3.fromRGB(45, 45, 45)
-FlyButton.TextColor3 = Color3.fromRGB(255, 255, 255)
-FlyButton.Font = Enum.Font.Gotham
-FlyButton.TextSize = 14
-FlyButton.Parent = MovPage
-
-local flying = false
-local UIS = game:GetService("UserInputService")
-local runService = game:GetService("RunService")
-
-FlyButton.MouseButton1Click:Connect(function()
-    flying = not flying
-    local player = game.Players.LocalPlayer
-    local char = player.Character or player.CharacterAdded:Wait()
-    local humanoidRoot = char:WaitForChild("HumanoidRootPart")
-    local bodyGyro = Instance.new("BodyGyro")
-    local bodyVelocity = Instance.new("BodyVelocity")
-    
-    if flying then
-        bodyGyro.P = 9e4
-        bodyGyro.Parent = humanoidRoot
-        bodyVelocity.Velocity = Vector3.zero
-        bodyVelocity.MaxForce = Vector3.new(9e9, 9e9, 9e9)
-        bodyVelocity.Parent = humanoidRoot
-
-        runService.RenderStepped:Connect(function()
-            if flying then
-                bodyGyro.CFrame = workspace.CurrentCamera.CFrame
-                local moveVector = Vector3.zero
-                if UIS:IsKeyDown(Enum.KeyCode.W) then
-                    moveVector = moveVector + workspace.CurrentCamera.CFrame.LookVector
-                end
-                if UIS:IsKeyDown(Enum.KeyCode.S) then
-                    moveVector = moveVector - workspace.CurrentCamera.CFrame.LookVector
-                end
-                if UIS:IsKeyDown(Enum.KeyCode.A) then
-                    moveVector = moveVector - workspace.CurrentCamera.CFrame.RightVector
-                end
-                if UIS:IsKeyDown(Enum.KeyCode.D) then
-                    moveVector = moveVector + workspace.CurrentCamera.CFrame.RightVector
-                end
-                bodyVelocity.Velocity = moveVector * 50
-            else
-                bodyGyro:Destroy()
-                bodyVelocity:Destroy()
-            end
-        end)
-    end
-end)
-
--- Speed
-local SpeedButton = Instance.new("TextButton")
-SpeedButton.Size = UDim2.new(0, 200, 0, 40)
-SpeedButton.Position = UDim2.new(0, 10, 0, 60)
-SpeedButton.Text = "Ativar Speed"
-SpeedButton.BackgroundColor3 = Color3.fromRGB(45, 45, 45)
-SpeedButton.TextColor3 = Color3.fromRGB(255, 255, 255)
-SpeedButton.Font = Enum.Font.Gotham
-SpeedButton.TextSize = 14
-SpeedButton.Parent = MovPage
-
-local speedOn = false
-SpeedButton.MouseButton1Click:Connect(function()
-    speedOn = not speedOn
-    local humanoid = game.Players.LocalPlayer.Character and game.Players.LocalPlayer.Character:FindFirstChildWhichIsA("Humanoid")
-    if humanoid then
-        if speedOn then
-            humanoid.WalkSpeed = 80
-        else
-            humanoid.WalkSpeed = 16
+CreateButton("Troll", "Teleport Random Player", function()
+    local players = Players:GetPlayers()
+    if #players > 1 then
+        local randomPlayer = players[math.random(1,#players)]
+        if randomPlayer ~= LocalPlayer and randomPlayer.Character and randomPlayer.Character:FindFirstChild("HumanoidRootPart") then
+            LocalPlayer.Character:MoveTo(randomPlayer.Character.HumanoidRootPart.Position)
         end
     end
 end)
 
--- NoClip
-local NoclipButton = Instance.new("TextButton")
-NoclipButton.Size = UDim2.new(0, 200, 0, 40)
-NoclipButton.Position = UDim2.new(0, 10, 0, 110)
-NoclipButton.Text = "Ativar NoClip (B para atravessar)"
-NoclipButton.BackgroundColor3 = Color3.fromRGB(45, 45, 45)
-NoclipButton.TextColor3 = Color3.fromRGB(255, 255, 255)
-NoclipButton.Font = Enum.Font.Gotham
-NoclipButton.TextSize = 14
-NoclipButton.Parent = MovPage
+-- Funções Movimentação
+CreateButton("Movimentação", "Fly (GUI)", function()
+    -- Fly via GUI
+    local FlyGui = Instance.new("ScreenGui", LocalPlayer.PlayerGui)
+    FlyGui.Name = "FlyGui"
 
-local noclip = false
-local function NoClipLoop()
-    if noclip then
-        for _, v in pairs(game.Players.LocalPlayer.Character:GetDescendants()) do
-            if v:IsA("BasePart") and v.CanCollide then
-                v.CanCollide = false
-            end
-        end
-    end
-end
+    local FlyButton = Instance.new("TextButton", FlyGui)
+    FlyButton.Size = UDim2.new(0,200,0,50)
+    FlyButton.Position = UDim2.new(0.5,-100,0.9,-25)
+    FlyButton.BackgroundColor3 = Color3.fromRGB(50,50,255)
+    FlyButton.Text = "Fly: OFF"
+    FlyButton.Font = Enum.Font.GothamBold
+    FlyButton.TextColor3 = Color3.new(1,1,1)
+    FlyButton.TextSize = 20
 
-NoclipButton.MouseButton1Click:Connect(function()
-    noclip = not noclip
-end)
+    local flying = false
+    local speed = 50
 
-game:GetService("RunService").Stepped:Connect(function()
-    if noclip then
-        NoClipLoop()
-    end
-end)-- Funções de Visual dentro da página Visual
-local VisualPage = Pages["Visual"]
+    FlyButton.MouseButton1Click:Connect(function()
+        flying = not flying
+        FlyButton.Text = flying and "Fly: ON" or "Fly: OFF"
+        
+        if flying then
+            local char = LocalPlayer.Character
+            local humanoidRootPart = char:WaitForChild("HumanoidRootPart")
+            local bodyVelocity = Instance.new("BodyVelocity", humanoidRootPart)
+            bodyVelocity.MaxForce = Vector3.new(1e5,1e5,1e5)
+            bodyVelocity.Name = "FlyVelocity"
 
--- FullBright
-local FullBrightButton = Instance.new("TextButton")
-FullBrightButton.Size = UDim2.new(0, 200, 0, 40)
-FullBrightButton.Position = UDim2.new(0, 10, 0, 10)
-FullBrightButton.Text = "Ativar FullBright"
-FullBrightButton.BackgroundColor3 = Color3.fromRGB(45, 45, 45)
-FullBrightButton.TextColor3 = Color3.fromRGB(255, 255, 255)
-FullBrightButton.Font = Enum.Font.Gotham
-FullBrightButton.TextSize = 14
-FullBrightButton.Parent = VisualPage
-
-local brightOn = false
-FullBrightButton.MouseButton1Click:Connect(function()
-    brightOn = not brightOn
-    if brightOn then
-        game.Lighting.Brightness = 2
-        game.Lighting.ClockTime = 14
-        game.Lighting.FogEnd = 100000
-        game.Lighting.GlobalShadows = false
-    else
-        game.Lighting.Brightness = 1
-        game.Lighting.ClockTime = 12
-        game.Lighting.FogEnd = 1000
-        game.Lighting.GlobalShadows = true
-    end
-end)
-
--- ESP (Player Highlight)
-local ESPButton = Instance.new("TextButton")
-ESPButton.Size = UDim2.new(0, 200, 0, 40)
-ESPButton.Position = UDim2.new(0, 10, 0, 60)
-ESPButton.Text = "Ativar ESP (ver jogadores)"
-ESPButton.BackgroundColor3 = Color3.fromRGB(45, 45, 45)
-ESPButton.TextColor3 = Color3.fromRGB(255, 255, 255)
-ESPButton.Font = Enum.Font.Gotham
-ESPButton.TextSize = 14
-ESPButton.Parent = VisualPage
-
-local espOn = false
-local function CreateESP(plr)
-    if plr.Character then
-        local highlight = Instance.new("Highlight")
-        highlight.FillColor = Color3.fromRGB(255, 0, 0)
-        highlight.OutlineColor = Color3.fromRGB(255, 255, 255)
-        highlight.Parent = plr.Character
-    end
-end
-
-ESPButton.MouseButton1Click:Connect(function()
-    espOn = not espOn
-    if espOn then
-        for _, player in pairs(game.Players:GetPlayers()) do
-            if player ~= game.Players.LocalPlayer then
-                CreateESP(player)
-            end
-        end
-        game.Players.PlayerAdded:Connect(function(player)
-            player.CharacterAdded:Connect(function()
-                CreateESP(player)
+            RunService.RenderStepped:Connect(function()
+                if not bodyVelocity.Parent then return end
+                local cam = workspace.CurrentCamera
+                local moveVec = Vector3.new()
+                if UserInputService:IsKeyDown(Enum.KeyCode.W) then moveVec = moveVec + cam.CFrame.LookVector end
+                if UserInputService:IsKeyDown(Enum.KeyCode.S) then moveVec = moveVec - cam.CFrame.LookVector end
+                if UserInputService:IsKeyDown(Enum.KeyCode.A) then moveVec = moveVec - cam.CFrame.RightVector end
+                if UserInputService:IsKeyDown(Enum.KeyCode.D) then moveVec = moveVec + cam.CFrame.RightVector end
+                bodyVelocity.Velocity = moveVec * speed
             end)
-        end)
-    else
-        for _, player in pairs(game.Players:GetPlayers()) do
-            if player.Character then
-                for _, obj in pairs(player.Character:GetChildren()) do
-                    if obj:IsA("Highlight") then
-                        obj:Destroy()
-                    end
+        else
+            if LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("HumanoidRootPart") then
+                local humrp = LocalPlayer.Character.HumanoidRootPart
+                if humrp:FindFirstChild("FlyVelocity") then
+                    humrp.FlyVelocity:Destroy()
                 end
+            end
+        end
+    end)
+end)
+
+CreateButton("Movimentação", "Super Velocidade", function()
+    local char = LocalPlayer.Character
+    if char and char:FindFirstChildOfClass("Humanoid") then
+        char.Humanoid.WalkSpeed = 100
+    end
+end)
+
+CreateButton("Movimentação", "Super Pulo", function()
+    local char = LocalPlayer.Character
+    if char and char:FindFirstChildOfClass("Humanoid") then
+        char.Humanoid.JumpPower = 200
+    end
+end)
+
+-- Funções Visual
+CreateButton("Visual", "ESP Players", function()
+    for _, player in ipairs(Players:GetPlayers()) do
+        if player ~= LocalPlayer and player.Character and player.Character:FindFirstChild("HumanoidRootPart") then
+            local billboard = Instance.new("BillboardGui", player.Character.HumanoidRootPart)
+            billboard.Size = UDim2.new(0,100,0,40)
+            billboard.AlwaysOnTop = true
+            billboard.Name = "ESPBillboard"
+
+            local label = Instance.new("TextLabel", billboard)
+            label.Size = UDim2.new(1,0,1,0)
+            label.BackgroundTransparency = 1
+            label.Text = player.Name
+            label.TextColor3 = Color3.fromRGB(255,0,0)
+            label.TextStrokeTransparency = 0
+            label.Font = Enum.Font.GothamBold
+            label.TextSize = 14
+        end
+    end
+end)
+
+CreateButton("Visual", "Remover ESP", function()
+    for _, player in ipairs(Players:GetPlayers()) do
+        if player.Character and player.Character:FindFirstChild("HumanoidRootPart") then
+            if player.Character.HumanoidRootPart:FindFirstChild("ESPBillboard") then
+                player.Character.HumanoidRootPart.ESPBillboard:Destroy()
             end
         end
     end
 end)
 
--- Remove Fog (Remover Neblina)
-local RemoveFogButton = Instance.new("TextButton")
-RemoveFogButton.Size = UDim2.new(0, 200, 0, 40)
-RemoveFogButton.Position = UDim2.new(0, 10, 0, 110)
-RemoveFogButton.Text = "Remover Neblina"
-RemoveFogButton.BackgroundColor3 = Color3.fromRGB(45, 45, 45)
-RemoveFogButton.TextColor3 = Color3.fromRGB(255, 255, 255)
-RemoveFogButton.Font = Enum.Font.Gotham
-RemoveFogButton.TextSize = 14
-RemoveFogButton.Parent = VisualPage
+-- Funções Admin
+CreateButton("Admin", "Tornar-se Admin (On/Off)", function()
+    -- Sistema de Crachá Administrador
+    if LocalPlayer.Character and not LocalPlayer.Character:FindFirstChild("AdminBadge") then
+        local badge = Instance.new("BillboardGui", LocalPlayer.Character.Head)
+        badge.Name = "AdminBadge"
+        badge.Size = UDim2.new(0,150,0,50)
+        badge.StudsOffset = Vector3.new(0,2,0)
+        badge.AlwaysOnTop = true
 
-RemoveFogButton.MouseButton1Click:Connect(function()
-    game.Lighting.FogEnd = 100000
-end)-- Funções de Admin dentro da página Admin
-local AdminPage = Pages["Admin"]
-
--- Input para nome do player alvo
-local AdminNameBox = Instance.new("TextBox")
-AdminNameBox.Size = UDim2.new(0, 200, 0, 40)
-AdminNameBox.Position = UDim2.new(0, 10, 0, 10)
-AdminNameBox.PlaceholderText = "Nome do Jogador"
-AdminNameBox.BackgroundColor3 = Color3.fromRGB(45, 45, 45)
-AdminNameBox.TextColor3 = Color3.fromRGB(255, 255, 255)
-AdminNameBox.Font = Enum.Font.Gotham
-AdminNameBox.TextSize = 14
-AdminNameBox.Parent = AdminPage
-
--- Botão "Banir Player"
-local BanButton = Instance.new("TextButton")
-BanButton.Size = UDim2.new(0, 200, 0, 40)
-BanButton.Position = UDim2.new(0, 10, 0, 60)
-BanButton.Text = "Banir Jogador"
-BanButton.BackgroundColor3 = Color3.fromRGB(45, 45, 45)
-BanButton.TextColor3 = Color3.fromRGB(255, 255, 255)
-BanButton.Font = Enum.Font.Gotham
-BanButton.TextSize = 14
-BanButton.Parent = AdminPage
-
-BanButton.MouseButton1Click:Connect(function()
-    local targetName = AdminNameBox.Text
-    local targetPlayer = game.Players:FindFirstChild(targetName)
-    if targetPlayer then
-        targetPlayer:Kick("Você foi banido pelo Administrador.")
-    end
-end)
-
--- Botão "Kickar Player"
-local KickButton = Instance.new("TextButton")
-KickButton.Size = UDim2.new(0, 200, 0, 40)
-KickButton.Position = UDim2.new(0, 10, 0, 110)
-KickButton.Text = "Expulsar Jogador"
-KickButton.BackgroundColor3 = Color3.fromRGB(45, 45, 45)
-KickButton.TextColor3 = Color3.fromRGB(255, 255, 255)
-KickButton.Font = Enum.Font.Gotham
-KickButton.TextSize = 14
-KickButton.Parent = AdminPage
-
-KickButton.MouseButton1Click:Connect(function()
-    local targetName = AdminNameBox.Text
-    local targetPlayer = game.Players:FindFirstChild(targetName)
-    if targetPlayer then
-        targetPlayer:Kick("Você foi expulso pelo Administrador.")
-    end
-end)
-
--- Botão "Tornar-se Admin (ON/OFF)"
-local AdminToggleButton = Instance.new("TextButton")
-AdminToggleButton.Size = UDim2.new(0, 200, 0, 40)
-AdminToggleButton.Position = UDim2.new(0, 10, 0, 160)
-AdminToggleButton.Text = "Ativar Admin"
-AdminToggleButton.BackgroundColor3 = Color3.fromRGB(45, 45, 45)
-AdminToggleButton.TextColor3 = Color3.fromRGB(255, 255, 255)
-AdminToggleButton.Font = Enum.Font.Gotham
-AdminToggleButton.TextSize = 14
-AdminToggleButton.Parent = AdminPage
-
-local adminOn = false
-local badgeGui = nil
-
-AdminToggleButton.MouseButton1Click:Connect(function()
-    adminOn = not adminOn
-    if adminOn then
-        AdminToggleButton.Text = "Desativar Admin"
-        -- Adiciona um crachá no player
-        badgeGui = Instance.new("BillboardGui")
-        badgeGui.Size = UDim2.new(0, 100, 0, 50)
-        badgeGui.Adornee = game.Players.LocalPlayer.Character:WaitForChild("Head")
-        badgeGui.AlwaysOnTop = true
-
-        local label = Instance.new("TextLabel")
-        label.Size = UDim2.new(1, 0, 1, 0)
+        local label = Instance.new("TextLabel", badge)
+        label.Size = UDim2.new(1,0,1,0)
         label.BackgroundTransparency = 1
         label.Text = "Administrador Brookhaven"
-        label.TextColor3 = Color3.fromRGB(255, 0, 0)
+        label.TextColor3 = Color3.fromRGB(255,215,0)
         label.TextStrokeTransparency = 0
         label.Font = Enum.Font.GothamBold
-        label.TextSize = 14
-        label.Parent = badgeGui
-
-        badgeGui.Parent = game.Players.LocalPlayer.Character
+        label.TextSize = 16
     else
-        AdminToggleButton.Text = "Ativar Admin"
-        if badgeGui then
-            badgeGui:Destroy()
-            badgeGui = nil
+        if LocalPlayer.Character:FindFirstChild("AdminBadge") then
+            LocalPlayer.Character.AdminBadge:Destroy()
         end
+    end
+end)
+
+CreateButton("Admin", "Kick Player", function()
+    local playerName = CreateInput("Digite o nome do jogador para kickar")
+    if playerName ~= "" then
+        local target = Players:FindFirstChild(playerName)
+        if target then
+            target:Kick("Você foi kickado pelo Administrador.")
+        end
+    end
+end)
+
+CreateButton("Admin", "Ban Player (Simulado)", function()
+    local playerName = CreateInput("Digite o nome do jogador para banir")
+    if playerName ~= "" then
+        local target = Players:FindFirstChild(playerName)
+        if target then
+            target:Kick("Você foi banido permanentemente.")
+        end
+    end
+end)
+
+-- Funções Música
+CreateButton("Música", "Tocar Música", function()
+    local musicId = CreateInput("Digite o ID da música")
+    if musicId ~= "" then
+        local sound = Instance.new("Sound", workspace)
+        sound.SoundId = "rbxassetid://" .. musicId
+        sound:Play()
+    end
+end)
+
+CreateButton("Música", "Parar Música", function()
+    for _, sound in pairs(workspace:GetChildren()) do
+        if sound:IsA("Sound") then
+            sound:Stop()
+        end
+    end
+end)
+
+-- Funções Config
+CreateButton("Config", "Salvar Configurações", function()
+    local settings = {
+        ["Fly"] = "Off",
+        ["ESP"] = "Off",
+        ["SuperVel"] = "Off",
+        ["SuperJump"] = "Off"
+    }
+    local savedSettings = game:GetService("DataStoreService"):GetDataStore("HubSettings")
+    local success, errorMessage = pcall(function()
+        savedSettings:SetAsync(LocalPlayer.UserId, settings)
+    end)
+    if success then
+        print("Configurações salvas com sucesso!")
+    else
+        print("Erro ao salvar configurações: " .. errorMessage)
+    end
+end)
+
+CreateButton("Config", "Carregar Configurações", function()
+    local savedSettings = game:GetService("DataStoreService"):GetDataStore("HubSettings")
+    local settings
+    local success, errorMessage = pcall(function()
+        settings = savedSettings:GetAsync(LocalPlayer.UserId)
+    end)
+    if success and settings then
+        print("Configurações carregadas!")
+        -- Aplicar configurações
+        if settings["Fly"] == "On" then
+            -- Ativar Fly
+        end
+        if settings["ESP"] == "On" then
+            -- Ativar ESP
+        end
+        if settings["SuperVel"] == "On" then
+            -- Ativar Super Velocidade
+        end
+        if settings["SuperJump"] == "On" then
+            -- Ativar Super Pulo
+        end
+    else
+        print("Erro ao carregar configurações: " .. errorMessage)
     end
 end)
