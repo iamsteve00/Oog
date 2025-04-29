@@ -1,388 +1,367 @@
--- Emilli Hub VERSÃO FINAL
--- Parte 1 de 7
-
--- Serviços
-local Players = game:GetService("Players")
-local StarterGui = game:GetService("StarterGui")
-local RunService = game:GetService("RunService")
-local LocalPlayer = Players.LocalPlayer
-
--- Criar a Interface
+-- Criação da Interface Principal
 local ScreenGui = Instance.new("ScreenGui", game.CoreGui)
 ScreenGui.Name = "EmilliHub"
 
-local MainFrame = Instance.new("Frame", ScreenGui)
-MainFrame.Size = UDim2.new(0, 450, 0, 400)
-MainFrame.Position = UDim2.new(0.5, -225, 0.5, -200)
-MainFrame.BackgroundColor3 = Color3.fromRGB(30,30,30)
-MainFrame.BorderSizePixel = 0
-MainFrame.Visible = false
+-- Mensagem de Boas-Vindas
+local Welcome = Instance.new("TextLabel", ScreenGui)
+Welcome.Size = UDim2.new(0.3, 0, 0.1, 0)
+Welcome.Position = UDim2.new(0.35, 0, 0.45, 0)
+Welcome.Text = "Bem-vindo ao Emilli Hub!"
+Welcome.TextScaled = true
+Welcome.TextColor3 = Color3.new(1, 1, 1)
+Welcome.BackgroundTransparency = 1
+Welcome.Font = Enum.Font.GothamBold
 
-local UICorner = Instance.new("UICorner", MainFrame)
-UICorner.CornerRadius = UDim.new(0, 8)
+-- Fade in/out
+task.spawn(function()
+	for i = 0, 1, 0.05 do
+		Welcome.TextTransparency = i
+		task.wait(0.05)
+	end
+	Welcome:Destroy()
+end)
+
+-- Janela Principal
+local Main = Instance.new("Frame", ScreenGui)
+Main.Size = UDim2.new(0, 600, 0, 400)
+Main.Position = UDim2.new(0.3, 0, 0.2, 0)
+Main.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
+Main.BorderSizePixel = 0
+Main.Visible = true
 
 -- Título
-local Title = Instance.new("TextLabel", MainFrame)
+local Title = Instance.new("TextLabel", Main)
 Title.Size = UDim2.new(1, 0, 0, 40)
-Title.BackgroundTransparency = 1
 Title.Text = "Brookhaven RP | Português"
+Title.TextScaled = true
+Title.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+Title.TextColor3 = Color3.new(1, 1, 1)
 Title.Font = Enum.Font.GothamBold
-Title.TextColor3 = Color3.fromRGB(255,0,0)
-Title.TextSize = 20
 
--- Minimize e Close
-local Minimize = Instance.new("TextButton", MainFrame)
-Minimize.Size = UDim2.new(0, 30, 0, 30)
-Minimize.Position = UDim2.new(1, -70, 0, 5)
-Minimize.BackgroundColor3 = Color3.fromRGB(50,50,50)
-Minimize.Text = "-"
-Minimize.TextColor3 = Color3.new(1,1,1)
-local MinimizeCorner = Instance.new("UICorner", Minimize)
-MinimizeCorner.CornerRadius = UDim.new(1,0)
-
-local Close = Instance.new("TextButton", MainFrame)
-Close.Size = UDim2.new(0, 30, 0, 30)
-Close.Position = UDim2.new(1, -35, 0, 5)
-Close.BackgroundColor3 = Color3.fromRGB(255,50,50)
+-- Botões de Minimizar e Fechar
+local Close = Instance.new("TextButton", Title)
+Close.Size = UDim2.new(0, 40, 0, 40)
+Close.Position = UDim2.new(1, -40, 0, 0)
 Close.Text = "X"
-Close.TextColor3 = Color3.new(1,1,1)
-local CloseCorner = Instance.new("UICorner", Close)
-CloseCorner.CornerRadius = UDim.new(1,0)
+Close.TextColor3 = Color3.new(1, 0, 0)
+Close.BackgroundTransparency = 1
+Close.Font = Enum.Font.GothamBold
+Close.MouseButton1Click:Connect(function() ScreenGui:Destroy() end)
 
--- Funções de Minimizar e Fechar
-Minimize.MouseButton1Click:Connect(function()
-	MainFrame.Visible = not MainFrame.Visible
-end)
+local Minimize = Instance.new("TextButton", Title)
+Minimize.Size = UDim2.new(0, 40, 0, 40)
+Minimize.Position = UDim2.new(1, -80, 0, 0)
+Minimize.Text = "_"
+Minimize.TextColor3 = Color3.new(1, 1, 0)
+Minimize.BackgroundTransparency = 1
+Minimize.Font = Enum.Font.GothamBold
 
-Close.MouseButton1Click:Connect(function()
-	ScreenGui:Destroy()
-end)
-
--- Animação de Boas-vindas
-local WelcomeFrame = Instance.new("Frame", ScreenGui)
-WelcomeFrame.Size = UDim2.new(0, 400, 0, 100)
-WelcomeFrame.Position = UDim2.new(0.5, -200, 0.5, -50)
-WelcomeFrame.BackgroundTransparency = 0.5
-WelcomeFrame.BackgroundColor3 = Color3.fromRGB(20,20,20)
-WelcomeFrame.Visible = true
-
-local WelcomeUICorner = Instance.new("UICorner", WelcomeFrame)
-WelcomeUICorner.CornerRadius = UDim.new(0, 10)
-
-local WelcomeLabel = Instance.new("TextLabel", WelcomeFrame)
-WelcomeLabel.Size = UDim2.new(1, 0, 1, 0)
-WelcomeLabel.BackgroundTransparency = 1
-WelcomeLabel.Text = "Bem-vindo ao Emilli Hub!"
-WelcomeLabel.Font = Enum.Font.GothamBold
-WelcomeLabel.TextColor3 = Color3.fromRGB(255,0,0)
-WelcomeLabel.TextSize = 30
-
-task.spawn(function()
-	for i = 1,0,-0.05 do
-		WelcomeFrame.BackgroundTransparency = i
-		task.wait(0.05)
-	end
-	task.wait(2)
-	for i = 0,1,0.05 do
-		WelcomeFrame.BackgroundTransparency = i
-		task.wait(0.05)
-	end
-	WelcomeFrame:Destroy()
-	MainFrame.Visible = true
-end)
-
--- Sidebar (Abas)
-local Sidebar = Instance.new("Frame", MainFrame)
-Sidebar.Size = UDim2.new(0, 70, 1, -40)
-Sidebar.Position = UDim2.new(0, 0, 0, 40)
-Sidebar.BackgroundColor3 = Color3.fromRGB(40,40,40)
-
-local SidebarCorner = Instance.new("UICorner", Sidebar)
-SidebarCorner.CornerRadius = UDim.new(0,8)
-
--- Conteúdo principal
-local ContentFrame = Instance.new("Frame", MainFrame)
-ContentFrame.Size = UDim2.new(1, -70, 1, -40)
-ContentFrame.Position = UDim2.new(0, 70, 0, 40)
+local ContentFrame = Instance.new("Frame", Main)
+ContentFrame.Position = UDim2.new(0, 50, 0, 40)
+ContentFrame.Size = UDim2.new(1, -50, 1, -40)
 ContentFrame.BackgroundTransparency = 1
 
--- Tabelas para controle de abas
-local Tabs = {}
-local CurrentTab
+-- Aba Lateral com Ícones
+local Tabs = Instance.new("Frame", Main)
+Tabs.Size = UDim2.new(0, 50, 1, 0)
+Tabs.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
+Tabs.BorderSizePixel = 0
 
--- Criar função para adicionar Abas
-function CreateTab(name, iconId)
-	local Button = Instance.new("ImageButton", Sidebar)
-	Button.Size = UDim2.new(1, 0, 0, 50)
-	Button.BackgroundTransparency = 1
-	Button.Image = "rbxassetid://"..iconId
-	
-	local TabFrame = Instance.new("ScrollingFrame", ContentFrame)
-	TabFrame.Size = UDim2.new(1,0,1,0)
-	TabFrame.CanvasSize = UDim2.new(0,0,2,0)
-	TabFrame.ScrollBarThickness = 6
-	TabFrame.BackgroundTransparency = 1
-	TabFrame.Visible = false
-	
-	Button.MouseButton1Click:Connect(function()
-		if CurrentTab then
-			CurrentTab.Visible = false
-		end
-		TabFrame.Visible = true
-		CurrentTab = TabFrame
-	end)
-	
-	Tabs[name] = TabFrame
+-- Função para criar botões de aba
+local function createTab(name, icon, callback)
+	local tab = Instance.new("TextButton", Tabs)
+	tab.Size = UDim2.new(1, 0, 0, 50)
+	tab.Text = icon
+	tab.Font = Enum.Font.SourceSansBold
+	tab.TextSize = 24
+	tab.TextColor3 = Color3.fromRGB(255, 255, 255)
+	tab.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+	tab.BorderSizePixel = 0
+	tab.MouseButton1Click:Connect(callback)
 end
 
--- Criar função para adicionar Botões dentro das Abas
-function CreateButton(tabName, text, callback)
-	local Button = Instance.new("TextButton", Tabs[tabName])
-	Button.Size = UDim2.new(1, -10, 0, 40)
-	Button.Position = UDim2.new(0,5,0, #Tabs[tabName]:GetChildren()*45)
-	Button.BackgroundColor3 = Color3.fromRGB(60,60,60)
-	Button.Text = text
-	Button.Font = Enum.Font.GothamBold
-	Button.TextColor3 = Color3.new(1,1,1)
-	Button.TextSize = 18
-	Button.BorderSizePixel = 0
-	
-	local ButtonCorner = Instance.new("UICorner", Button)
-	ButtonCorner.CornerRadius = UDim.new(0,6)
-	
-	Button.MouseButton1Click:Connect(callback)
+-- Exemplo de Criação de Abas (continuaremos na Parte 6)
+createTab("Troll", "😈", function()
+	-- mostrar conteúdo da aba troll
 end)
 
--- Criando as Abas
-CreateTab("Troll", "4483362458") -- ícone de troll
-CreateTab("Movimentação", "4483362269") -- ícone de movimento
-CreateTab("Visual", "4483362909") -- ícone de olho
-CreateTab("Admin", "4483362535") -- ícone de escudo
-CreateTab("Música", "4483363015") -- ícone de música
-CreateTab("Config", "4483363095") -- ícone de engrenagem
-
--- Funções Troll
-CreateButton("Troll", "Fling Players", function()
-    -- Fling clássico
-    local character = LocalPlayer.Character
-    if character and character:FindFirstChild("HumanoidRootPart") then
-        local BodyVelocity = Instance.new("BodyVelocity", character.HumanoidRootPart)
-        BodyVelocity.Velocity = Vector3.new(0,9999,0)
-        BodyVelocity.MaxForce = Vector3.new(999999,999999,999999)
-        task.wait(0.5)
-        BodyVelocity:Destroy()
-    end
+createTab("Mov", "🏃", function()
+	-- mostrar conteúdo da aba movimentação
 end)
 
-CreateButton("Troll", "Teleport Random Player", function()
-    local players = Players:GetPlayers()
-    if #players > 1 then
-        local randomPlayer = players[math.random(1,#players)]
-        if randomPlayer ~= LocalPlayer and randomPlayer.Character and randomPlayer.Character:FindFirstChild("HumanoidRootPart") then
-            LocalPlayer.Character:MoveTo(randomPlayer.Character.HumanoidRootPart.Position)
+createTab("Visual", "👁", function()
+	-- mostrar conteúdo da aba visual
+end)
+
+createTab("Admin", "🛠", function()
+	-- mostrar conteúdo da aba admin
+end)
+
+createTab("Música", "🎵", function()
+	-- mostrar conteúdo da aba música
+end)
+
+createTab("Config", "⚙️", function()
+	-- mostrar conteúdo da aba config
+end)-- Parte 4 - Funções das Abas: Visual, Admin, Música e Config
+
+-- Visual: Highlight Players
+local function highlightPlayers()
+    for _, player in pairs(game.Players:GetPlayers()) do
+        if player.Character and not player.Character:FindFirstChild("Highlight") then
+            local highlight = Instance.new("Highlight")
+            highlight.Name = "Highlight"
+            highlight.FillColor = Color3.fromRGB(255, 0, 0)
+            highlight.OutlineColor = Color3.fromRGB(255, 255, 255)
+            highlight.FillTransparency = 0.5
+            highlight.Parent = player.Character
         end
     end
-end)
+end
 
--- Funções Movimentação
-CreateButton("Movimentação", "Fly (GUI)", function()
-    -- Fly via GUI
-    local FlyGui = Instance.new("ScreenGui", LocalPlayer.PlayerGui)
-    FlyGui.Name = "FlyGui"
+highlightPlayers()
 
-    local FlyButton = Instance.new("TextButton", FlyGui)
-    FlyButton.Size = UDim2.new(0,200,0,50)
-    FlyButton.Position = UDim2.new(0.5,-100,0.9,-25)
-    FlyButton.BackgroundColor3 = Color3.fromRGB(50,50,255)
-    FlyButton.Text = "Fly: OFF"
-    FlyButton.Font = Enum.Font.GothamBold
-    FlyButton.TextColor3 = Color3.new(1,1,1)
-    FlyButton.TextSize = 20
+-- Admin: Tornar-se Admin (com crachá visível FE)
+local isAdmin = false
+local function toggleAdmin()
+    local char = game.Players.LocalPlayer.Character
+    if not char then return end
 
-    local flying = false
-    local speed = 50
+    if isAdmin then
+        local tag = char:FindFirstChild("AdminTag")
+        if tag then tag:Destroy() end
+        isAdmin = false
+    else
+        local billboard = Instance.new("BillboardGui")
+        billboard.Name = "AdminTag"
+        billboard.Size = UDim2.new(0, 200, 0, 50)
+        billboard.StudsOffset = Vector3.new(0, 3, 0)
+        billboard.Adornee = char:FindFirstChild("Head")
+        billboard.AlwaysOnTop = true
 
-    FlyButton.MouseButton1Click:Connect(function()
-        flying = not flying
-        FlyButton.Text = flying and "Fly: ON" or "Fly: OFF"
-        
-        if flying then
-            local char = LocalPlayer.Character
-            local humanoidRootPart = char:WaitForChild("HumanoidRootPart")
-            local bodyVelocity = Instance.new("BodyVelocity", humanoidRootPart)
-            bodyVelocity.MaxForce = Vector3.new(1e5,1e5,1e5)
-            bodyVelocity.Name = "FlyVelocity"
-
-            RunService.RenderStepped:Connect(function()
-                if not bodyVelocity.Parent then return end
-                local cam = workspace.CurrentCamera
-                local moveVec = Vector3.new()
-                if UserInputService:IsKeyDown(Enum.KeyCode.W) then moveVec = moveVec + cam.CFrame.LookVector end
-                if UserInputService:IsKeyDown(Enum.KeyCode.S) then moveVec = moveVec - cam.CFrame.LookVector end
-                if UserInputService:IsKeyDown(Enum.KeyCode.A) then moveVec = moveVec - cam.CFrame.RightVector end
-                if UserInputService:IsKeyDown(Enum.KeyCode.D) then moveVec = moveVec + cam.CFrame.RightVector end
-                bodyVelocity.Velocity = moveVec * speed
-            end)
-        else
-            if LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("HumanoidRootPart") then
-                local humrp = LocalPlayer.Character.HumanoidRootPart
-                if humrp:FindFirstChild("FlyVelocity") then
-                    humrp.FlyVelocity:Destroy()
-                end
-            end
-        end
-    end)
-end)
-
-CreateButton("Movimentação", "Super Velocidade", function()
-    local char = LocalPlayer.Character
-    if char and char:FindFirstChildOfClass("Humanoid") then
-        char.Humanoid.WalkSpeed = 100
-    end
-end)
-
-CreateButton("Movimentação", "Super Pulo", function()
-    local char = LocalPlayer.Character
-    if char and char:FindFirstChildOfClass("Humanoid") then
-        char.Humanoid.JumpPower = 200
-    end
-end)
-
--- Funções Visual
-CreateButton("Visual", "ESP Players", function()
-    for _, player in ipairs(Players:GetPlayers()) do
-        if player ~= LocalPlayer and player.Character and player.Character:FindFirstChild("HumanoidRootPart") then
-            local billboard = Instance.new("BillboardGui", player.Character.HumanoidRootPart)
-            billboard.Size = UDim2.new(0,100,0,40)
-            billboard.AlwaysOnTop = true
-            billboard.Name = "ESPBillboard"
-
-            local label = Instance.new("TextLabel", billboard)
-            label.Size = UDim2.new(1,0,1,0)
-            label.BackgroundTransparency = 1
-            label.Text = player.Name
-            label.TextColor3 = Color3.fromRGB(255,0,0)
-            label.TextStrokeTransparency = 0
-            label.Font = Enum.Font.GothamBold
-            label.TextSize = 14
-        end
-    end
-end)
-
-CreateButton("Visual", "Remover ESP", function()
-    for _, player in ipairs(Players:GetPlayers()) do
-        if player.Character and player.Character:FindFirstChild("HumanoidRootPart") then
-            if player.Character.HumanoidRootPart:FindFirstChild("ESPBillboard") then
-                player.Character.HumanoidRootPart.ESPBillboard:Destroy()
-            end
-        end
-    end
-end)
-
--- Funções Admin
-CreateButton("Admin", "Tornar-se Admin (On/Off)", function()
-    -- Sistema de Crachá Administrador
-    if LocalPlayer.Character and not LocalPlayer.Character:FindFirstChild("AdminBadge") then
-        local badge = Instance.new("BillboardGui", LocalPlayer.Character.Head)
-        badge.Name = "AdminBadge"
-        badge.Size = UDim2.new(0,150,0,50)
-        badge.StudsOffset = Vector3.new(0,2,0)
-        badge.AlwaysOnTop = true
-
-        local label = Instance.new("TextLabel", badge)
-        label.Size = UDim2.new(1,0,1,0)
+        local label = Instance.new("TextLabel", billboard)
+        label.Size = UDim2.new(1, 0, 1, 0)
         label.BackgroundTransparency = 1
         label.Text = "Administrador Brookhaven"
-        label.TextColor3 = Color3.fromRGB(255,215,0)
+        label.TextColor3 = Color3.fromRGB(255, 255, 255)
+        label.TextStrokeColor3 = Color3.fromRGB(255, 0, 0)
         label.TextStrokeTransparency = 0
         label.Font = Enum.Font.GothamBold
-        label.TextSize = 16
-    else
-        if LocalPlayer.Character:FindFirstChild("AdminBadge") then
-            LocalPlayer.Character.AdminBadge:Destroy()
+        label.TextScaled = true
+
+        billboard.Parent = char
+        isAdmin = true
+    end
+end
+
+-- Admin: Get todas as Gamepasses (Fake FE)
+local function giveAllGamepasses()
+    local char = game.Players.LocalPlayer.Character
+    if char then
+        local tag = Instance.new("BillboardGui", char:FindFirstChild("Head"))
+        tag.Size = UDim2.new(0, 200, 0, 50)
+        tag.StudsOffset = Vector3.new(0, 4, 0)
+        tag.AlwaysOnTop = true
+        local label = Instance.new("TextLabel", tag)
+        label.Text = "Todas as Gamepasses Ativadas"
+        label.TextColor3 = Color3.fromRGB(0, 255, 0)
+        label.BackgroundTransparency = 1
+        label.Size = UDim2.new(1, 0, 1, 0)
+        label.Font = Enum.Font.GothamBold
+        label.TextScaled = true
+    end
+end
+
+-- Música: Reprodutor de música por ID
+local Sound = Instance.new("Sound", game.Workspace)
+Sound.Name = "HubMusic"
+Sound.Looped = true
+
+local function playMusic(id)
+    Sound.SoundId = "rbxassetid://" .. id
+    Sound:Play()
+end
+
+local function stopMusic()
+    Sound:Stop()
+end
+
+-- Config: Botão para salvar configurações (simulação)
+local function saveConfig()
+    print("Configurações salvas (simulação)")
+end-- Parte 3 - Funções da Aba Movimentação
+
+-- Fly GUI (FE)
+local UIS = game:GetService("UserInputService")
+local flying = false
+local speed = 50
+
+local function fly()
+    local player = game.Players.LocalPlayer
+    local char = player.Character
+    local hrp = char:WaitForChild("HumanoidRootPart")
+
+    local bv = Instance.new("BodyVelocity")
+    bv.Velocity = Vector3.new()
+    bv.MaxForce = Vector3.new(1e9, 1e9, 1e9)
+    bv.Parent = hrp
+
+    local direction = Vector3.new()
+
+    UIS.InputBegan:Connect(function(input)
+        if input.KeyCode == Enum.KeyCode.W then
+            direction = Vector3.new(0, 0, -1)
+        elseif input.KeyCode == Enum.KeyCode.S then
+            direction = Vector3.new(0, 0, 1)
+        elseif input.KeyCode == Enum.KeyCode.A then
+            direction = Vector3.new(-1, 0, 0)
+        elseif input.KeyCode == Enum.KeyCode.D then
+            direction = Vector3.new(1, 0, 0)
         end
-    end
-end)
-
-CreateButton("Admin", "Kick Player", function()
-    local playerName = CreateInput("Digite o nome do jogador para kickar")
-    if playerName ~= "" then
-        local target = Players:FindFirstChild(playerName)
-        if target then
-            target:Kick("Você foi kickado pelo Administrador.")
-        end
-    end
-end)
-
-CreateButton("Admin", "Ban Player (Simulado)", function()
-    local playerName = CreateInput("Digite o nome do jogador para banir")
-    if playerName ~= "" then
-        local target = Players:FindFirstChild(playerName)
-        if target then
-            target:Kick("Você foi banido permanentemente.")
-        end
-    end
-end)
-
--- Funções Música
-CreateButton("Música", "Tocar Música", function()
-    local musicId = CreateInput("Digite o ID da música")
-    if musicId ~= "" then
-        local sound = Instance.new("Sound", workspace)
-        sound.SoundId = "rbxassetid://" .. musicId
-        sound:Play()
-    end
-end)
-
-CreateButton("Música", "Parar Música", function()
-    for _, sound in pairs(workspace:GetChildren()) do
-        if sound:IsA("Sound") then
-            sound:Stop()
-        end
-    end
-end)
-
--- Funções Config
-CreateButton("Config", "Salvar Configurações", function()
-    local settings = {
-        ["Fly"] = "Off",
-        ["ESP"] = "Off",
-        ["SuperVel"] = "Off",
-        ["SuperJump"] = "Off"
-    }
-    local savedSettings = game:GetService("DataStoreService"):GetDataStore("HubSettings")
-    local success, errorMessage = pcall(function()
-        savedSettings:SetAsync(LocalPlayer.UserId, settings)
     end)
-    if success then
-        print("Configurações salvas com sucesso!")
-    else
-        print("Erro ao salvar configurações: " .. errorMessage)
-    end
-end)
 
-CreateButton("Config", "Carregar Configurações", function()
-    local savedSettings = game:GetService("DataStoreService"):GetDataStore("HubSettings")
-    local settings
-    local success, errorMessage = pcall(function()
-        settings = savedSettings:GetAsync(LocalPlayer.UserId)
+    UIS.InputEnded:Connect(function(input)
+        direction = Vector3.new()
     end)
-    if success and settings then
-        print("Configurações carregadas!")
-        -- Aplicar configurações
-        if settings["Fly"] == "On" then
-            -- Ativar Fly
-        end
-        if settings["ESP"] == "On" then
-            -- Ativar ESP
-        end
-        if settings["SuperVel"] == "On" then
-            -- Ativar Super Velocidade
-        end
-        if settings["SuperJump"] == "On" then
-            -- Ativar Super Pulo
-        end
-    else
-        print("Erro ao carregar configurações: " .. errorMessage)
+
+    flying = true
+    while flying do
+        bv.Velocity = hrp.CFrame:VectorToWorldSpace(direction) * speed
+        wait()
     end
-end)
+end
+
+local function stopFly()
+    flying = false
+    local hrp = game.Players.LocalPlayer.Character:WaitForChild("HumanoidRootPart")
+    for _, obj in pairs(hrp:GetChildren()) do
+        if obj:IsA("BodyVelocity") then
+            obj:Destroy()
+        end
+    end
+end
+
+-- UI Buttons para Fly (On/Off)
+local flyOn = Instance.new("TextButton")
+flyOn.Text = "Fly ON"
+flyOn.Size = UDim2.new(0, 100, 0, 30)
+flyOn.Position = UDim2.new(0.3, 0, 0.2, 0)
+flyOn.Parent = game.CoreGui
+flyOn.MouseButton1Click:Connect(fly)
+
+local flyOff = Instance.new("TextButton")
+flyOff.Text = "Fly OFF"
+flyOff.Size = UDim2.new(0, 100, 0, 30)
+flyOff.Position = UDim2.new(0.3, 0, 0.25, 0)
+flyOff.Parent = game.CoreGui
+flyOff.MouseButton1Click:Connect(stopFly)
+
+-- Speed (Controlável)
+local speedSlider = Instance.new("TextBox")
+speedSlider.Text = "Velocidade: 50"
+speedSlider.Size = UDim2.new(0, 200, 0, 30)
+speedSlider.Position = UDim2.new(0.3, 0, 0.3, 0)
+speedSlider.ClearTextOnFocus = false
+speedSlider.Parent = game.CoreGui
+
+speedSlider.FocusLost:Connect(function()
+    local val = tonumber(speedSlider.Text)
+    if val then
+        speed = val
+    else
+        speedSlider.Text = "Velocidade: 50"
+        speed = 50
+    end
+end)-- Parte 2 do script - Funções na Aba Troll
+
+-- Função para matar o jogador selecionado
+local function killPlayer(playerName)
+    local player = game.Players:FindFirstChild(playerName)
+    if player then
+        player:LoadCharacter() -- Mata o jogador
+    end
+end
+
+-- Função para teleportar o jogador para o jogador selecionado
+local function tpPlayer(playerName)
+    local player = game.Players:FindFirstChild(playerName)
+    if player then
+        game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = player.Character.HumanoidRootPart.CFrame -- Teleporta para o player
+    end
+end
+
+-- Função para ver o jogador selecionado (View Player)
+local function viewPlayer(playerName, viewMode)
+    local player = game.Players:FindFirstChild(playerName)
+    if player then
+        if viewMode == "On" then
+            -- Exibe o jogador selecionado
+            player.Character:FindFirstChild("Head").Transparency = 0
+        elseif viewMode == "Off" then
+            -- Esconde o jogador
+            player.Character:FindFirstChild("Head").Transparency = 1
+        end
+    end
+end
+
+-- Adicionando a interface para as funções com barra de digitação para nome do jogador
+local function addTrollFunctions()
+    -- UI para Kill Player
+    local killInput = Instance.new("TextBox")
+    killInput.Position = UDim2.new(0.5, 0, 0.3, 0)
+    killInput.Size = UDim2.new(0, 200, 0, 30)
+    killInput.PlaceholderText = "Digite o nome do jogador"
+    killInput.Parent = game.CoreGui
+
+    local killButton = Instance.new("TextButton")
+    killButton.Position = UDim2.new(0.5, 0, 0.35, 0)
+    killButton.Size = UDim2.new(0, 200, 0, 30)
+    killButton.Text = "Matar Jogador"
+    killButton.Parent = game.CoreGui
+    killButton.MouseButton1Click:Connect(function()
+        killPlayer(killInput.Text)
+    end)
+
+    -- UI para TP Player
+    local tpInput = Instance.new("TextBox")
+    tpInput.Position = UDim2.new(0.5, 0, 0.45, 0)
+    tpInput.Size = UDim2.new(0, 200, 0, 30)
+    tpInput.PlaceholderText = "Digite o nome do jogador"
+    tpInput.Parent = game.CoreGui
+
+    local tpButton = Instance.new("TextButton")
+    tpButton.Position = UDim2.new(0.5, 0, 0.5, 0)
+    tpButton.Size = UDim2.new(0, 200, 0, 30)
+    tpButton.Text = "Teletransportar Jogador"
+    tpButton.Parent = game.CoreGui
+    tpButton.MouseButton1Click:Connect(function()
+        tpPlayer(tpInput.Text)
+    end)
+
+    -- UI para View Player (On/Off)
+    local viewInput = Instance.new("TextBox")
+    viewInput.Position = UDim2.new(0.5, 0, 0.6, 0)
+    viewInput.Size = UDim2.new(0, 200, 0, 30)
+    viewInput.PlaceholderText = "Digite o nome do jogador"
+    viewInput.Parent = game.CoreGui
+
+    local viewButtonOn = Instance.new("TextButton")
+    viewButtonOn.Position = UDim2.new(0.5, 0, 0.65, 0)
+    viewButtonOn.Size = UDim2.new(0, 100, 0, 30)
+    viewButtonOn.Text = "Ver Jogador (On)"
+    viewButtonOn.Parent = game.CoreGui
+    viewButtonOn.MouseButton1Click:Connect(function()
+        viewPlayer(viewInput.Text, "On")
+    end)
+
+    local viewButtonOff = Instance.new("TextButton")
+    viewButtonOff.Position = UDim2.new(0.5, 0, 0.7, 0)
+    viewButtonOff.Size = UDim2.new(0, 100, 0, 30)
+    viewButtonOff.Text = "Ver Jogador (Off)"
+    viewButtonOff.Parent = game.CoreGui
+    viewButtonOff.MouseButton1Click:Connect(function()
+        viewPlayer(viewInput.Text, "Off")
+    end)
+end
+
+addTrollFunctions()
